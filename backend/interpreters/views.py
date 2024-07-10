@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 from rest_framework import generics
 from .serializers import InterpreterSerializer
@@ -20,3 +21,7 @@ class InterpreterListCreateAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         return super().perform_create(serializer)
+
+def home_page(request):
+    # return HttpResponse("Hello world")
+    return render()
