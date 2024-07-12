@@ -21,6 +21,3 @@ class InterpreterListCreateAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         return super().perform_create(serializer)
-
-def home_page(request):
-    return render(request, "landing_page.html")

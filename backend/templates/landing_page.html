@@ -2,25 +2,25 @@
 {% load static %}
 
 {% block content %}
-<div class="bg-image text-center text-light" style="background-image: url({% static 'buildings.jpg' %}); background-size: cover; height: 100vh;">
+<div class="bg-image text-center text-light vh-100" style="background-image: url({% static 'buildings.jpg' %}); background-size: cover; background-position: center;">
     <div class="d-flex flex-column justify-content-center align-items-center h-100">
         <h1>Language Services...</h1>
         <h2>Made Easy</h2>
         <p>MINIMIZING COMMUNICATION RISKS BY OVERCOMING ANY CULTURAL AND LANGUAGE BARRIERS</p>
     </div>
 </div>
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6">
-            <img src="path/to/about-image.jpg" class="img-fluid" alt="About Us">
+<div class="container-fluid mt-5 px-0">
+    <div class="row mx-0">
+        <div class="col-md-6 px-0">
+            <img src="{% static 'about-image.jpg' %}" class="img-fluid w-100" alt="About Us">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 d-flex flex-column justify-content-center align-items-center px-4">
             <h2>About Us</h2>
             <p>Details about the company...</p>
         </div>
     </div>
 </div>
-<div class="bg-image text-center text-light" style="background-image: url('path/to/services-image.jpg'); background-size: cover; height: 100vh;">
+<div class="bg-image text-center text-light vh-100" style="background-image: url({% static 'buildings.jpg' %}); background-size: cover; background-position: center;">
     <div class="d-flex flex-column justify-content-center align-items-center h-100">
         <h2>Our Services</h2>
         <p>Details about the services...</p>
