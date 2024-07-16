@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Neno Dynamix</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+            .interpreter {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 6px;
+                padding-right: 6px;
+                margin-10: 10px;
+                background-color: #f6f6f6;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/api/jobs"> Go back to Jobs </a>
+        <hr/>
+        <h1> Create a new Job </h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+        
+    </body>
+</html>

@@ -21,3 +21,11 @@ class InterpreterListCreateAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         return super().perform_create(serializer)
+
+def interpreter_list(request):
+    interpreters = Interpreter.objects.all()
+    context = {
+        "interpreters": interpreters
+    }
+
+    return render(request, "interpreters/interpreter_list.html", context)

@@ -14,6 +14,9 @@ class Client(models.Model):
         decimal_places=2
     )
 
+    def __str__(self):
+        return f'{self.company_name}'
+
 class CEO(models.Model):
     client = models.OneToOneField("Client", unique=True, on_delete=models.CASCADE)
     first_name =  models.CharField(max_length=100, blank=False)

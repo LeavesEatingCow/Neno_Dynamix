@@ -22,3 +22,6 @@ class Job(models.Model):
     lep_name = models.CharField(max_length=100)
     expected_duration = models.DurationField()
     description = models.TextField()
+
+    def __str__(self):
+        return f'{self.client}: {self.location}'
