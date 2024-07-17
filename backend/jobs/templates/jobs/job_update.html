@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'jobs:job-detail' job.pk %}"> Go back </a>
+    <hr/>
+    <h1> Update Job: {{ job.client }} {{ job.client_job_id }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+        
+{% endblock %}

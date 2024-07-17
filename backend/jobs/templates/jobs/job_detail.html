@@ -1,35 +1,17 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Neno Dynamix</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <style>
-            .interpreter {
-                padding-top: 10px;
-                padding-bottom: 10px;
-                padding-left: 6px;
-                padding-right: 6px;
-                margin-10: 10px;
-                background-color: #f6f6f6;
-                width: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <a href="/api/jobs"> Go back to Jobs </a>
-        <hr/>
-        <h1>This is the details of {{ job.client }}'s job </h1>
-        <p>Date: {{ job.job_date }}</p>
-        <p>ID: {{ job.client_job_id }}</p>
-        <p>Location: {{ job.location }}</p>
-        <p>Name: {{ job.practice_name }}</p>
-        <p>Language: {{ job.language }}</p>
-        <p>LEP Name: {{ job.lep_name }}</p>
-        <p> Description: {{ job.description }}</p>
-        
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'jobs:job-list' %}"> Go back to Jobs </a>
+    <hr/>
+    <h1>This is the details of {{ job.client }}'s job </h1>
+    <p>Date: {{ job.job_date }}</p>
+    <p>ID: {{ job.client_job_id }}</p>
+    <p>Location: {{ job.location }}</p>
+    <p>Name: {{ job.practice_name }}</p>
+    <p>Language: {{ job.language }}</p>
+    <p>LEP Name: {{ job.lep_name }}</p>
+    <p> Description: {{ job.description }}</p>
+    <hr/>
+    <a href="{% url 'jobs:job-update' job.pk %}">Update</a>
+    <a href="{% url 'jobs:job-delete' job.pk %}">Delete</a>
+{% endblock %}

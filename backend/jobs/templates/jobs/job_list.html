@@ -1,33 +1,14 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Neno Dynamix</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <style>
-            .interpreter {
-                padding-top: 10px;
-                padding-bottom: 10px;
-                padding-left: 6px;
-                padding-right: 6px;
-                margin-10: 10px;
-                background-color: #f6f6f6;
-                width: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <a href="/api/jobs/create/"> Create a new Job </a>
-        <hr />
-       <h1>This is all of our jobs </h1>
-       {% for job in jobs %}
+{% extends "base.html" %}
+
+{% block content %}
+
+    <a href="{% url 'jobs:job-create' %}"> Create a new Job </a>
+    <hr />
+    <h1>This is all of our jobs </h1>
+    {% for job in jobs %}
         <div class="interpreter">
-            <a href="/api/jobs/{{ job.pk }}/"> {{ job }} </a>: {{ job.description }}
+            <a href="{% url 'jobs:job-detail' job.pk %}"> {{ job }} </a>: {{ job.description }}
         </div>
-       {% endfor %}
-        
-    </body>
-</html>
+    {% endfor %}
+
+{% endblock %}
