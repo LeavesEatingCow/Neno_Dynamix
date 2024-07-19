@@ -1,22 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-
-
-# Create your models here.
-
-class User(AbstractUser):
-    pass
-
+from core.models import User
 class Interpreter(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # first_name =  models.CharField(max_length=100, blank=False)
-    # last_name =  models.CharField(max_length=100, blank=False)
-    phone_number =  models.CharField(max_length=100, blank=False)
-    # email =  models.EmailField()
-    address =  models.CharField(max_length=100, blank=False)
-    ssn =  models.CharField(max_length=100, blank=False)
-    # username =  models.CharField(max_length=100, blank=False)
-    # password =  models.CharField(max_length=100, blank=False)
+    first_name =  models.CharField(max_length=50)
+    last_name =  models.CharField(max_length=50)
+    phone_number =  models.CharField(max_length=15)
+    email =  models.EmailField()
+    address =  models.TextField()
+    ssn = models.CharField(max_length=11)
 
     def accept_job(self):
         pass
@@ -28,4 +19,4 @@ class Interpreter(models.Model):
         pass
 
     def __str__(self) -> str:
-        return self.user.username
+        return f'{self.first_name} {self.last_name}'

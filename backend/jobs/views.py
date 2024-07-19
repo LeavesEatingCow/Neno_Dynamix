@@ -1,16 +1,15 @@
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DeleteView
 from .models import Job
 from .forms import JobForm, JobModelForm
 from client.models import Client
-
-from rest_framework import generics
 from .serializers import JobSerializer
 
 # Create your views here.
 
-class JobListView(ListView):
+class JobListView(LoginRequiredMixin, ListView):
     template_name = "jobs/job_list.html"
     queryset = Job.objects.all()
     context_object_name = "jobs"
@@ -24,7 +23,7 @@ def job_list(request):
 
     return render(request, "jobs/job_list.html", context)
 
-class JobDetailView(DeleteView):
+class JobDetailView(LoginRequiredMixin, DeleteView):
     template_name = "jobs/job_detail.html"
     queryset = Job.objects.all()
     context_object_name = "job"
@@ -38,7 +37,7 @@ def job_detail(request, pk):
 
     return render(request, "jobs/job_detail.html", context)
 
-class JobCreateView(CreateView):
+class JobCreateView(LoginRequiredMixin, CreateView):
     template_name = "jobs/job_create.html"
     form_class = JobModelForm
 
@@ -74,7 +73,7 @@ def job_create(request):
     }
     return render(request, "jobs/job_create.html", context)
 
-class JobUpdateView(UpdateView):
+class JobUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "jobs/job_update.html"
     form_class = JobModelForm
     queryset = Job.objects.all()
@@ -103,7 +102,7 @@ def job_update(request, pk):
 
     return render(request, "jobs/job_update.html", context)
 
-class JobDeleteView(DeleteView):
+class JobDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "jobs/job_delete.html"
     queryset = Job.objects.all()
 
@@ -203,6 +202,3 @@ def job_delete(request, pk):
     # }
 #     return render(request, "jobs/job_create.html", context)
 
-class JobDetailAPIView(generics.RetrieveAPIView):
-    queryset = Job.objects.all()
-    serializer_class = JobSerializer
