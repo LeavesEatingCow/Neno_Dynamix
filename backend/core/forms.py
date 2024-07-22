@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UsernameField
-from interpreters.models import User
-from django.contrib.auth import get_user_model
+from core.models import User
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
