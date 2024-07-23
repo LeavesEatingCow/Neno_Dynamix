@@ -19,12 +19,6 @@ class Client(models.Model):
     def __str__(self):
         return f'{self.company_name}'
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-
 class CEO(models.Model):
     client = models.OneToOneField("Client", unique=True, on_delete=models.CASCADE)
     first_name =  models.CharField(max_length=100, blank=False)
@@ -40,9 +34,9 @@ class Contact(models.Model):
     email =  models.EmailField()
 
 
-def post_user_created_signal(sender, instance, created, **kwargs):
-    if instance.is_client:
-            Client.objects.create(user=instance)
-    print(instance, created)
+# def post_user_created_signal(sender, instance, created, **kwargs):
+#     if instance.is_client:
+#             Client.objects.create(user=instance)
+#     print(instance, created)
 
 # post_save.connect(post_user_created_signal, sender=User)
