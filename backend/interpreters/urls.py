@@ -1,7 +1,6 @@
 from django.urls import path
-# from .views import api_home
-
+from .views import InterpreterListView, InterpreterSignupView
 urlpatterns = [
-#     path('', InterpreterListCreateAPIView.as_view()),
-#     path('all/', interpreter_list)
+    path('', InterpreterListView.as_view(), name='interpreters'),
+    path('signup/', InterpreterSignupView.as_view(), name='signup')
 ]

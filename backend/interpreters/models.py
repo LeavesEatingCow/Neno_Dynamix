@@ -2,10 +2,10 @@ from django.db import models
 from core.models import User
 class Interpreter(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name =  models.CharField(max_length=50)
-    last_name =  models.CharField(max_length=50)
+    # first_name =  models.CharField(max_length=50)
+    # last_name =  models.CharField(max_length=50)
     phone_number =  models.CharField(max_length=15)
-    email =  models.EmailField()
+    # email =  models.EmailField()
     address =  models.TextField()
     ssn = models.CharField(max_length=11)
 

@@ -26,11 +26,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", LandingPageView.as_view(), name="landing-page"),
     path("api/", include("api.urls")),
-    path("api/interpreters/", include("interpreters.urls")),
-    path("api/jobs/", include(("jobs.urls", "jobs"),namespace="jobs")),
+    path("interpreters/", include(("interpreters.urls", "interpreters"), namespace="interpreters")),
+    path("clients/", include(("client.urls", "clients"), namespace="clients")),
+    path("jobs/", include(("jobs.urls", "jobs"),namespace="jobs")),
     path('login/', LoginView.as_view(), name="login"),
     path('logout/', LogoutView.as_view(), name="logout"),
-    path('signup/', ClientSignupView.as_view(), name="signup")
 ]
 
 if settings.DEBUG:

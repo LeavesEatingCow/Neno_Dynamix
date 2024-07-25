@@ -35,7 +35,7 @@
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
         {% if not request.user.is_authenticated %}
-        <a href="{% url 'signup' %}"><button type="button" class="btn btn-dark">Signup</button></a>
+        <a href="{% url 'clients:signup' %}"><button type="button" class="btn btn-dark">Signup</button></a>
         {% endif%}
         {% if request.user.is_authenticated %}
           Logged in as: {{ request.user.username }}
