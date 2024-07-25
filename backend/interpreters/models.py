@@ -8,6 +8,7 @@ class Interpreter(models.Model):
     # email =  models.EmailField()
     address =  models.TextField()
     ssn = models.CharField(max_length=11)
+    languages = models.ManyToManyField('Language', related_name='interpreters')
 
     def accept_job(self):
         pass
@@ -19,4 +20,10 @@ class Interpreter(models.Model):
         pass
 
     def __str__(self) -> str:
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.user.first_name} {self.user.last_name}'
+    
+class Language(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name

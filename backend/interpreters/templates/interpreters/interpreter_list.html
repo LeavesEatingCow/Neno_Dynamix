@@ -5,8 +5,7 @@
     <h1>This is all of our interpreters </h1>
     {% for interpreter in interpreters %}
         <div class="interpreter">
-            {{ interpreter }}
-        </div>
+            <a href="{% url 'interpreters:interpreter-detail' interpreter.pk %}"> {{ interpreter }} </a>
     {% endfor %}
         
 {% endblock %}

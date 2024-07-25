@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'interpreters:interpreter-list' %}"> Go back to Jobs </a>
+    <hr/>
+    <h1>This is the details of {{ interpreter.user.first_name }} {{ interpreter.user.last_name }}'s job </h1>
+    <p>Phone Number: {{ interpreter.phone_number }}</p>
+    <p>Address: {{ interpreter.address }}</p>
+    <p>SSN: {{ interpreter.ssn }}</p>
+    <hr/>
+    <a href="{% url 'interpreters:interpreter-update' user.interpreter.pk %}">Update</a>
+{% endblock %}

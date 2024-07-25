@@ -62,7 +62,7 @@ def job_create(request):
 
         if form.is_valid():
             form.save()
-            return redirect("/api/jobs/")
+            return redirect("/jobs/")
 
         else:
             print("Invalid Form")
@@ -89,7 +89,7 @@ def job_update(request, pk):
 
         if form.is_valid():
             form.save()
-            return redirect("/api/jobs/")
+            return redirect("/jobs/")
 
         else:
             print("Invalid Form")
@@ -112,7 +112,7 @@ class JobDeleteView(LoginRequiredMixin, DeleteView):
 def job_delete(request, pk):
     job = Job.objects.get(id=pk)
     job.delete()
-    return redirect("/api/jobs/")
+    return redirect("/jobs/")
 
 # def job_update(request, pk):
 #     job = Job.objects.get(id=pk)
