@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'clients:client-detail' user.client.pk %}"> Go back </a>
+    <hr/>
+    <h1> Update Profile: {{ client.user.first_name }} {{ client.user.last_name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+        
+{% endblock %}

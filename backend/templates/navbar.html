@@ -38,7 +38,7 @@
         <a href="{% url 'clients:signup' %}"><button type="button" class="btn btn-dark">Signup</button></a>
         {% endif%}
         {% if request.user.is_authenticated %}
-          Logged in as: {{ request.user.username }}
+          Logged in as: <a href="{% url 'profile-redirect' %}">{{ request.user.username }}
           <a href="{% url 'logout' %}"><button type="button" class="btn btn-dark">Logout</button></a>
         {% else %}
           <a href="{% url 'login' %}"><button type="button" class="btn btn-dark">Login</button></a>

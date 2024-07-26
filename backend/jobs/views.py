@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DeleteView
 from .models import Job
@@ -37,7 +37,7 @@ def job_detail(request, pk):
 
     return render(request, "jobs/job_detail.html", context)
 
-class JobCreateView(LoginRequiredMixin, CreateView):
+class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = "jobs/job_create.html"
     form_class = JobModelForm
 
@@ -45,15 +45,12 @@ class JobCreateView(LoginRequiredMixin, CreateView):
         return reverse("jobs:job-list")
     
     def form_valid(self, form):
-        # TODO send email
-        send_mail(
-            subject="A Job has been created",
-            message="Go to the site to see new Job",
-            from_email="test@test.com",
-            recipient_list=["test2@test.com"],
-        )
-        return super(JobCreateView, self).form_valid(form) # Send an email, then finish out the super method
+        form.instance.client = self.request.user.client
+        return super().form_valid(form)
     
+    def test_func(self):
+        return self.request.user.is_client  # Only allow clients to access this view
+        
 
 def job_create(request):
     form = JobModelForm()

@@ -16,7 +16,7 @@ class Job(models.Model):
     date_posted = models.DateTimeField(default=datetime.now)
     location = models.CharField(max_length=255)
     practice_name = models.CharField(max_length=255)
-    language = models.CharField(max_length=100)
+    language = models.ForeignKey("interpreters.Language", on_delete=models.DO_NOTHING)
     lep_name = models.CharField(max_length=50)
     expected_duration = models.DurationField()
     description = models.TextField()

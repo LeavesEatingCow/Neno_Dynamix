@@ -27,3 +27,8 @@ class ClientCreationForm(UserCreationForm):
             )
             client.save()
         return user
+
+class ClientProfileForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['company_name', 'address', 'phone_number', 'fax_number']

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'jobs:job-list' %}"> Go back to Jobs </a>
+    <hr/>
+    <h1>This is the details of {{ client.user }} </h1>
+    <p>Comapny Name: {{ client.company_name }}</p>
+    <p>Phone Number: {{ client.phone_number }}</p>
+    <p>Fax Number: {{ client.fax_number }}</p>
+    <p>Start Date: {{ client.start_date }}</p>
+    <hr/>
+    <a href="{% url 'clients:client-update' user.client.pk %}">Update</a>
+{% endblock %}
