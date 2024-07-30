@@ -1,6 +1,7 @@
 from django.shortcuts import render, reverse, get_object_or_404
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from jobs.models import Job
 from .models import Interpreter
 from .forms import InterpreterCreationForm, InterpreterProfileForm
 # Create your views here.
@@ -33,3 +34,13 @@ class InterpreterUpdateView(LoginRequiredMixin, generic.UpdateView):
     
     def get_success_url(self) -> str:
         return reverse("jobs:job-list")
+    
+class InterpreterJobListView(LoginRequiredMixin, generic.ListView):
+    model = Job
+    template_name = 'interpreters/interpreter_jobs.html'
+    context_object_name = 'jobs'
+
+    def get_queryset(self):
+        interpreter = self.request.user.interpreter
+        languages = interpreter.languages.all()
+        return Job.objects.filter(language__in=languages)

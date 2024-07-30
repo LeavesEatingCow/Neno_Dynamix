@@ -7,7 +7,6 @@ class Interpreter(models.Model):
     phone_number =  models.CharField(max_length=15)
     # email =  models.EmailField()
     address =  models.TextField()
-    ssn = models.CharField(max_length=11)
     languages = models.ManyToManyField('Language', related_name='interpreters')
 
     def accept_job(self):

@@ -23,7 +23,6 @@ class InterpreterCreationForm(UserCreationForm):
                 user=user,
                 address=self.cleaned_data['address'],
                 phone_number=self.cleaned_data['phone_number'],
-                ssn=self.cleaned_data['ssn']
             )
             interpreter.save()
             interpreter.languages.set(self.cleaned_data['languages'])

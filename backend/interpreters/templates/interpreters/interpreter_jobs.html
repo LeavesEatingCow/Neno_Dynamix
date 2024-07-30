@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Available Jobs</h1>
+    <ul>
+        {% for job in jobs %}
+            <li>
+                <strong>{{ job.practice_name }}</strong><br>
+                Language: {{ job.language.name }}<br>
+                Location: {{ job.location }}<br>
+                Date: {{ job.job_date }}<br>
+                <a href="{% url 'jobs:job-detail' job.pk %}">View Details</a>
+            </li>
+        {% endfor %}   
+{% endblock %}
