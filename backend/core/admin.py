@@ -4,7 +4,7 @@ from .models import User
 # Register your models here.
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('is_client', 'is_interpreter')}),
+        (None, {'fields': ('is_client', 'is_interpreter', 'password_changed')}),
     )
 
 admin.site.register(User, CustomUserAdmin)

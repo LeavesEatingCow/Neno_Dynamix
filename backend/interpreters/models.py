@@ -180,7 +180,6 @@ def create_accepted_user(sender, instance, created, **kwargs):
                 state=instance.state, 
                 zip_code=instance.zip_code,
             )
-    print(instance, created)
-
+            
 post_save.connect(create_accepted_user, sender=InterpreterApplicant)
 

@@ -7,3 +7,4 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     is_client = models.BooleanField(default=False)
     is_interpreter = models.BooleanField(default=False)
+    password_changed = models.BooleanField(default=False)
