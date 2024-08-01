@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'landing-page' %}">Neno Dynamix</a>
+      <a class="navbar-brand" href="{% url 'core:landing-page' %}">Neno Dynamix</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'landing-page' %}">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'core:landing-page' %}">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">About Us</a>
@@ -18,16 +18,8 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Contact Us</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'core:career' %}">Career</a>
           </li>
         </ul>
         <form class="d-flex" role="search">
@@ -38,10 +30,10 @@
         <a href="{% url 'clients:signup' %}"><button type="button" class="btn btn-dark">Signup</button></a>
         {% endif%}
         {% if request.user.is_authenticated %}
-          Logged in as: <a href="{% url 'profile-redirect' %}">{{ request.user.username }}
-          <a href="{% url 'logout' %}"><button type="button" class="btn btn-dark">Logout</button></a>
+          Logged in as: <a href="{% url 'core:profile-redirect' %}">{{ request.user.username }}
+          <a href="{% url 'core:logout' %}"><button type="button" class="btn btn-dark">Logout</button></a>
         {% else %}
-          <a href="{% url 'login' %}"><button type="button" class="btn btn-dark">Login</button></a>
+          <a href="{% url 'core:login' %}"><button type="button" class="btn btn-dark">Login</button></a>
         {% endif %}
       </div>
     </div>

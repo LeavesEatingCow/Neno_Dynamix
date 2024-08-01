@@ -2,8 +2,8 @@ from django.shortcuts import render, reverse, get_object_or_404
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from jobs.models import Job
-from .models import Interpreter
-from .forms import InterpreterCreationForm, InterpreterProfileForm
+from .models import Interpreter, InterpreterApplicant
+from .forms import InterpreterProfileForm, InterpreterApplicantForm
 # Create your views here.
 class InterpreterListView(LoginRequiredMixin, generic.ListView):
     template_name = "interpreters/interpreter_list.html"
@@ -14,10 +14,10 @@ class InterpreterListView(LoginRequiredMixin, generic.ListView):
 
 class InterpreterSignupView(generic.CreateView):
     template_name = "registration/interpreter_signup.html"
-    form_class = InterpreterCreationForm
+    form_class = InterpreterApplicantForm
 
     def get_success_url(self) -> str:
-        return reverse("login")
+        return reverse("core:login")
     
 # Go to Profile Page
 class InterpreterDetailView(LoginRequiredMixin, generic.DetailView):

@@ -1,11 +1,18 @@
+from typing import Any
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 from django.shortcuts import render, reverse, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView
+from interpreters.models import InterpreterApplicant
 
 # Create your views here.
 
 class LandingPageView(TemplateView):
     template_name = "landing_page.html"
+
+class CareerPageView(TemplateView):
+    template_name = "career.html"
 
 
 @login_required

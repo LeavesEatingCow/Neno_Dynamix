@@ -11,7 +11,7 @@ class ClientSignupView(CreateView):
     form_class = ClientCreationForm
 
     def get_success_url(self) -> str:
-        return reverse("login")
+        return reverse("core:login")
     
 # Go to Profile Page
 class ClientDetailView(LoginRequiredMixin, generic.DetailView):
