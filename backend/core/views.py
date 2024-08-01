@@ -18,10 +18,13 @@ class CareerPageView(TemplateView):
 
 class UserPasswordUpdateView(PasswordChangeView):
     form_class = PasswordChangeForm
-    template_name = "registration/change_password.html"    
+    template_name = "registration/change_password.html"
 
     def form_valid(self, form):
-        self.request.user.password_changed = True
+        user = self.request.user
+        user.password_changed = True
+        user.save()
+
         return super().form_valid(form)
 
     def get_success_url(self):
