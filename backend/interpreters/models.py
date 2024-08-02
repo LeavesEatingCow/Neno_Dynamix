@@ -158,7 +158,7 @@ class InterpreterApplicant(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-def create_accepted_user(sender, instance, created, **kwargs):
+def create_accepted_interpreter_user(sender, instance, created, **kwargs):
     if instance.accept:
             user = User.objects.create(
                 username=instance.email_address,
@@ -181,5 +181,5 @@ def create_accepted_user(sender, instance, created, **kwargs):
                 zip_code=instance.zip_code,
             )
             
-post_save.connect(create_accepted_user, sender=InterpreterApplicant)
+post_save.connect(create_accepted_interpreter_user, sender=InterpreterApplicant)
 

@@ -3,13 +3,17 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from .models import Client
-from .forms import ClientCreationForm, ClientProfileForm
+from .forms import ClientApplicantForm, ClientProfileForm
 
 # Create your views here.
 class ClientSignupView(CreateView):
     template_name = "registration/signup.html"
-    form_class = ClientCreationForm
+    form_class = ClientApplicantForm
 
+    def form_valid(self, form):
+        form
+        return super().form_valid(form)
+    
     def get_success_url(self) -> str:
         return reverse("core:login")
     
