@@ -57,6 +57,7 @@ class InterpreterProfileForm(forms.ModelForm):
     
 
 class InterpreterApplicantForm(forms.ModelForm):
+
     class Meta:
         model = InterpreterApplicant
         fields = "__all__"
@@ -94,6 +95,22 @@ class InterpreterApplicantForm(forms.ModelForm):
             'home_office': 'Do you have an office or a quiet dedicated room at home?',
             'computer_ownership': 'Do you have a computer desktop or laptop?',
             'internet_skills': 'Rank your internet skills level:',
+            'resume': 'Upload Resume',
+        }
+        widgets = {
+            'authorized_to_work': forms.RadioSelect,
+            'document_translation_service': forms.RadioSelect,
+            'interpretation_translation_training': forms.RadioSelect,
+            'landline_phone_service': forms.RadioSelect,
+            'car_ownership': forms.RadioSelect,
+            'home_office': forms.RadioSelect,
+            'computer_ownership': forms.RadioSelect,
+            'currently_working': forms.RadioSelect,
         }
             
-            
+
+
+
+
+
+

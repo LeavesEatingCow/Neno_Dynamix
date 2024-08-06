@@ -37,6 +37,8 @@ class Language(models.Model):
 from django.db import models
 
 class InterpreterApplicant(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
     STATE_CHOICES = [
     ('AL', 'Alabama'), ('AK', 'Alaska'), ('AZ', 'Arizona'), ('AR', 'Arkansas'), ('CA', 'California'),
     ('CO', 'Colorado'), ('CT', 'Connecticut'), ('DE', 'Delaware'), ('FL', 'Florida'), ('GA', 'Georgia'),
@@ -121,7 +123,7 @@ class InterpreterApplicant(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=2, choices=STATE_CHOICES)
     zip_code = models.CharField(max_length=10)
-    authorized_to_work = models.BooleanField()
+    authorized_to_work = models.BooleanField(choices=BOOL_CHOICES, default=False)
     native_language = models.CharField(max_length=50)
     fluently_spoken_languages_count = models.CharField(max_length=10, choices=LANGUAGE_COUNT_CHOICES)
     spoken_languages = models.TextField()
@@ -131,27 +133,28 @@ class InterpreterApplicant(models.Model):
     interpretation_strength = models.CharField(max_length=50, choices=INTERPRETATION_STRENGTH_CHOICES)
     interpretation_field = models.CharField(max_length=50, choices=INTERPRETATION_FIELD_CHOICES)
     comfortable_interpreting_from = models.CharField(max_length=50)
-    document_translation_service = models.BooleanField()
+    document_translation_service = models.BooleanField(choices=BOOL_CHOICES, default=False)
     comfortable_translating_from = models.CharField(max_length=50)
-    interpretation_translation_training = models.BooleanField()
+    interpretation_translation_training = models.BooleanField(choices=BOOL_CHOICES, default=False)
     document_translation_specialization = models.CharField(max_length=50, choices=TRANSLATION_SPECIALIZATION_CHOICES)
     most_translated_document_type = models.CharField(max_length=50)
     translation_software_tools = models.CharField(max_length=50)
     words_translated_per_hour = models.CharField(max_length=50)
-    landline_phone_service = models.BooleanField()
-    car_ownership = models.BooleanField()
-    home_office = models.BooleanField()
-    computer_ownership = models.BooleanField()
+    landline_phone_service = models.BooleanField(choices=BOOL_CHOICES, default=False)
+    car_ownership = models.BooleanField(choices=BOOL_CHOICES, default=False)
+    home_office = models.BooleanField(choices=BOOL_CHOICES, default=False)
+    computer_ownership = models.BooleanField(choices=BOOL_CHOICES, default=False)
     internet_skills = models.CharField(max_length=50, choices=SKILL_LEVEL_CHOICES)
     mobile_app_skills = models.CharField(max_length=50, choices=SKILL_LEVEL_CHOICES)
     cell_phone_os = models.CharField(max_length=50, choices=PHONE_OS_CHOICES)
-    currently_working = models.BooleanField()
+    currently_working = models.BooleanField(choices=BOOL_CHOICES, default=False)
     current_language_services = models.TextField()
     current_rate = models.CharField(max_length=50)
     rate_expectation = models.CharField(max_length=50)
     payment_methods = models.CharField(max_length=50, choices=PAYMENT_METHOD_CHOICES)
     job_references = models.TextField()
     referrals = models.TextField(blank=True, null=True)
+    resume = models.FileField(upload_to='resumes/')
     accept = models.BooleanField(default=False)
     decline = models.BooleanField(default=False)
     
