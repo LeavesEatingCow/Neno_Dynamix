@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DeleteView
+from client.mixins import ClientAndLoginRequiredMixin
+from client.models import Client
+from .mixins import ClientIsOwnerMixin
 from .models import Job
 from .forms import JobForm, JobModelForm
-from client.models import Client
-from .serializers import JobSerializer
-
 # Create your views here.
 
-class JobListView(LoginRequiredMixin, ListView):
+class JobListView(ClientAndLoginRequiredMixin, ListView):
     template_name = "jobs/job_list.html"
     queryset = Job.objects.all()
     context_object_name = "jobs"
@@ -23,7 +23,7 @@ def job_list(request):
 
     return render(request, "jobs/job_list.html", context)
 
-class JobDetailView(LoginRequiredMixin, DeleteView):
+class JobDetailView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, DeleteView):
     template_name = "jobs/job_detail.html"
     queryset = Job.objects.all()
     context_object_name = "job"
@@ -37,7 +37,7 @@ def job_detail(request, pk):
 
     return render(request, "jobs/job_detail.html", context)
 
-class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class JobCreateView(ClientAndLoginRequiredMixin, CreateView):
     template_name = "jobs/job_create.html"
     form_class = JobModelForm
 
@@ -47,9 +47,6 @@ class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         form.instance.client = self.request.user.client
         return super().form_valid(form)
-    
-    def test_func(self):
-        return self.request.user.is_client  # Only allow clients to access this view
         
 
 def job_create(request):
@@ -70,7 +67,7 @@ def job_create(request):
     }
     return render(request, "jobs/job_create.html", context)
 
-class JobUpdateView(LoginRequiredMixin, UpdateView):
+class JobUpdateView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, UpdateView):
     template_name = "jobs/job_update.html"
     form_class = JobModelForm
     queryset = Job.objects.all()
@@ -99,7 +96,7 @@ def job_update(request, pk):
 
     return render(request, "jobs/job_update.html", context)
 
-class JobDeleteView(LoginRequiredMixin, DeleteView):
+class JobDeleteView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, DeleteView):
     template_name = "jobs/job_delete.html"
     queryset = Job.objects.all()
 

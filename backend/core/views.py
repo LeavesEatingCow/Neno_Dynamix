@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from .models import User
-
+from .mixins import UserIsOwnerMixin
 # Create your views here.
 
 class LandingPageView(TemplateView):
@@ -16,7 +16,7 @@ class LandingPageView(TemplateView):
 class CareerPageView(TemplateView):
     template_name = "career.html"
 
-class UserPasswordUpdateView(PasswordChangeView):
+class UserPasswordUpdateView(UserIsOwnerMixin, PasswordChangeView):
     form_class = PasswordChangeForm
     template_name = "registration/change_password.html"
 
