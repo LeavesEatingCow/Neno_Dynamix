@@ -11,7 +11,7 @@ from .mixins import UserIsOwnerMixin
 # Create your views here.
 
 class LandingPageView(TemplateView):
-    template_name = "landing_page.html"
+    template_name = "base_dashboard.html"
 
 class CareerPageView(TemplateView):
     template_name = "career.html"
