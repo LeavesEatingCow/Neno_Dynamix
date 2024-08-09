@@ -8,12 +8,8 @@ from .forms import ClientApplicantForm, ClientProfileForm
 from .mixins import ClientAndLoginRequiredMixin
 # Create your views here.
 class ClientSignupView(CreateView):
-    template_name = "registration/signup.html"
+    template_name = "client/client_signup.html"
     form_class = ClientApplicantForm
-
-    def form_valid(self, form):
-        form
-        return super().form_valid(form)
     
     def get_success_url(self) -> str:
         return reverse("core:login")

@@ -129,6 +129,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # Project-level static files
     # Add more paths for app-level static files if needed
+    os.path.join(BASE_DIR, 'client', 'static')
 ]
 
 STATIC_ROOT = "static_root"
