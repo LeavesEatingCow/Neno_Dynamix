@@ -39,13 +39,19 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    # Third party apps
+    "crispy_forms",
+    "crispy_bootstrap5",
+    'rest_framework',
+
+    # Local apps
     "core",
     "api",
     "interpreters",
     "client",
     "jobs",
     "assignments",
-    'rest_framework',
+    
 ]
 
 MIDDLEWARE = [
@@ -144,6 +150,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "core.User"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-LOGIN_REDIRECT_URL = "/jobs"
+LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/login"
 LOGOUT_REDIRECT_URL = "/"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

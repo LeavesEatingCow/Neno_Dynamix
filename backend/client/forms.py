@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from core.models import User
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, ButtonHolder, Submit
+from crispy_bootstrap5.bootstrap5 import FloatingField
 from .models import Client, ClientApplicant
 
 # class ClientCreationForm(UserCreationForm):
@@ -34,6 +37,31 @@ class ClientProfileForm(forms.ModelForm):
         fields = ['company_name', 'phone_number', 'fax_number']
 
 class ClientApplicantForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.form_method = 'post'
+            self.helper.layout = Layout(
+                FloatingField("poc_first_name"),
+                FloatingField("poc_last_name"),
+                FloatingField("poc_phone_number"),
+                FloatingField("poc_email_address"),
+                FloatingField("company_name"),
+                FloatingField("company_phone_number"),
+                FloatingField("ceo_first_name"),
+                FloatingField("ceo_last_name"),
+                FloatingField("ceo_phone_number"),
+                FloatingField("ceo_email_address"),
+                FloatingField("street_address"),
+                FloatingField("apt_number"),
+                FloatingField("city"),
+                FloatingField("state"),
+                FloatingField("zip_code"),
+                FloatingField("fax_number"),
+                ButtonHolder(
+                    Submit('submit', 'Signup', css_class='btn btn-primary')
+                )
+            )
     class Meta:
         model = ClientApplicant
         fields = "__all__"

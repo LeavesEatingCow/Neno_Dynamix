@@ -10,7 +10,7 @@ from .mixins import ClientAndLoginRequiredMixin
 class ClientSignupView(CreateView):
     template_name = "client/client_signup.html"
     form_class = ClientApplicantForm
-    
+
     def get_success_url(self) -> str:
         return reverse("core:login")
     

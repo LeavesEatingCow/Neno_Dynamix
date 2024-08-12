@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from .models import User
+from .forms import CustomAuthenticationForm
 from .mixins import UserIsOwnerMixin
 # Create your views here.
 
@@ -32,6 +33,7 @@ class UserPasswordUpdateView(UserIsOwnerMixin, PasswordChangeView):
 
 class CustomLoginView(LoginView):
     next_page = None
+    form_class = CustomAuthenticationForm
     
     def get_success_url(self):
         user = self.request.user
