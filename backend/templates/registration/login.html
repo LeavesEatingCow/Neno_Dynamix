@@ -1,13 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'registration/base_authentication.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
 
 {% block content %}
-    <form method="post">
-        <img class="mb-4" src="{% static 'images/fav-2-300x225.png'%}" alt="">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-        {% csrf_token %}
-        {% crispy form %}
-    </form>
+        <form method="post">
+            <h1 class="h3 mb-3 fw-normal">Please Login</h1>
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
 {% endblock %}
