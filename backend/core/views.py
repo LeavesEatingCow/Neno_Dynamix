@@ -43,6 +43,9 @@ class CustomLoginView(LoginView):
     
     def get_default_redirect_url(self):
         """Return the default redirect URL."""
+        user = self.request.user
+        if user.is_client:
+            settings.LOGIN_REDIRECT_URL = reverse_lazy("clients:client-dashbaord")
         return resolve_url(self.next_page or settings.LOGIN_REDIRECT_URL)
 
 @login_required
@@ -54,3 +57,5 @@ def profile_redirect_view(request):
         return redirect('interpreters:interpreter-detail', pk=user.interpreter.pk)
     else:
         return redirect('/')
+    
+    

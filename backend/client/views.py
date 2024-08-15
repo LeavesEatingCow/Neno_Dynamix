@@ -27,3 +27,6 @@ class ClientUpdateView(ClientAndLoginRequiredMixin, UserIsOwnerMixin, generic.Up
     
     def get_success_url(self) -> str:
         return reverse("jobs:job-list")
+    
+class ClientDashboardView(ClientAndLoginRequiredMixin, UserIsOwnerMixin, generic.TemplateView):
+    template_name = "base_dashboard.html"
