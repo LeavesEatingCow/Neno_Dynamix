@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
@@ -13,6 +15,13 @@ class JobListView(ClientAndLoginRequiredMixin, ListView):
     template_name = "jobs/job_list.html"
     queryset = Job.objects.all()
     context_object_name = "jobs"
+
+class ClientJobListView(ClientAndLoginRequiredMixin, ListView):
+    template_name = "client/client_job_list.html"
+    context_object_name = "jobs"
+
+    def get_queryset(self):
+        return Job.objects.filter(client=self.request.user.client)
 
 def job_list(request):
     jobs = Job.objects.all()
