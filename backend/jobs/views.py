@@ -1,6 +1,8 @@
 from typing import Any
-from django.db.models.query import QuerySet
-from django.shortcuts import render, redirect, reverse
+import json
+from django.http import HttpResponse, Http404
+from django.views.decorators.http import require_POST
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DeleteView
@@ -17,7 +19,7 @@ class JobListView(ClientAndLoginRequiredMixin, ListView):
     context_object_name = "jobs"
 
 class ClientJobListView(ClientAndLoginRequiredMixin, ListView):
-    template_name = "client/client_job_list.html"
+    template_name = "jobs/job_list.html"
     context_object_name = "jobs"
 
     def get_queryset(self):
@@ -117,91 +119,127 @@ def job_delete(request, pk):
     job.delete()
     return redirect("/jobs/")
 
-# def job_update(request, pk):
-#     job = Job.objects.get(id=pk)
-#     form = JobForm()
-#     if request.method == "POST":
-#         form = JobForm(request.POST) # To keep data on screen
+# Create your views here.
+def index(request):
+    return render(request, 'client/client_job_list.html', {})
 
-#         if form.is_valid():
-#             print("The form is valid")
-#             print(form.cleaned_data)
+class JobListView(ClientAndLoginRequiredMixin, ListView):
+    template_name = "jobs/job_list.html"
+    queryset = Job.objects.all()
+    context_object_name = "jobs"
 
-#             job_id = form.cleaned_data['job_id']
-#             job_date = form.cleaned_data['job_date']
-#             location = form.cleaned_data['location']
-#             practice_name = form.cleaned_data['practice_name']
-#             language = form.cleaned_data['language']
-#             lep_name = form.cleaned_data['lep_name']
-#             expected_duration = form.cleaned_data['expected_duration']
-#             description = form.cleaned_data['description']
-#             client = Client.objects.first()
+def add_job(request):
+    if request.method == "POST":
+        form = JobModelForm(request.POST)
+        if form.is_valid():
+            job = Job.objects.create(
+                client = request.user.client,
+                client_job_id = form.cleaned_data.get('client_job_id'),
+                job_date = form.cleaned_data.get('job_date'),
+                location = form.cleaned_data.get('location'),
+                practice_name = form.cleaned_data.get('practice_name'),
+                language = form.cleaned_data.get('language'),
+                lep_name = form.cleaned_data.get('lep_name'),
+                expected_duration = form.cleaned_data.get('expected_duration'),
+                description = form.cleaned_data.get('description'),
+            )
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "jobListChanged": None,
+                        "showMessage": f"{job.client}'s job has been added."
+                    })
+                })
+        else:
+            return render(request, 'jobs/job_form.html', {
+                'form': form,
+            })
+    else:
+        form = JobModelForm()
+    return render(request, 'jobs/job_form.html', {
+        'form': form,
+    })
 
-#             job.client_job_id = job_id
-#             job.job_date = job_date 
-#             job.location = location
-#             job.practice_name = practice_name
-#             job.language = language
-#             job.lep_name = lep_name
-#             job.expected_duration = expected_duration
-#             job.description = description
-#             job.client = client
-#             # Commit save
-#             job.save()
-#             print("Job Created")
-#             return redirect("/api/jobs/")
+def edit_job(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    if job.client != request.user.client:
+        raise Http404
+    if request.method == "POST":
+        form = JobModelForm(request.POST, initial={
+            'client' : job.client,
+            'client_job_id' : job.client_job_id,
+            'job_date' : job.job_date,
+            'date_posted' : job.date_posted,
+            'location' : job.location,
+            'practice_name' : job.practice_name,
+            'language' : job.language,
+            'lep_name' : job.lep_name,
+            'expected_duration' : job.expected_duration,
+            'description' : job.description,
+        })
+        if form.is_valid():
+            job.client_job_id = form.cleaned_data.get('client_job_id'),
+            job.job_date = form.cleaned_data.get('job_date'),
+            job.location = form.cleaned_data.get('location'),
+            job.practice_name = form.cleaned_data.get('practice_name'),
+            job.language = form.cleaned_data.get('language'),
+            job.lep_name = form.cleaned_data.get('lep_name'),
+            job.expected_duration = form.cleaned_data.get('expected_duration'),
+            job.description = form.cleaned_data.get('description'),
 
-#         else:
-#             print("Invalid Form")
-        
+            job.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                        "jobListChanged": None,
+                        "showMessage": f"{job.client}'s job has been updated."
+                    })
+                }
+            )
+        else:
+            return render(request, 'jobs/job_form.html', {
+                'form': form,
+                'job': job,
+            })
+    else:
+        form = JobModelForm(initial={
+            'client' : job.client,
+            'client_job_id' : job.client_job_id,
+            'job_date' : job.job_date,
+            'date_posted' : job.date_posted,
+            'location' : job.location,
+            'practice_name' : job.practice_name,
+            'language' : job.language,
+            'lep_name' : job.lep_name,
+            'expected_duration' : job.expected_duration,
+            'description' : job.description,
+            })
+    return render(request, 'jobs/job_form.html', {
+        'form': form,
+        'job': job,
+    })
 
-#     context = {
-#         "form": form,
-#         "job": job,
-#     }
+def remove_job_confirmation(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    if job.client != request.user.client:
+        raise Http404
+    return render(request, 'jobs/job_delete_confirmation.html', {
+        'job': job,
+    })
 
-#     return render(request, "jobs/job_update.html", context)
-
-
-# def job_create(request):
-    # form = JobForm()
-    # if request.method == "POST":
-    #     form = JobForm(request.POST) # To keep data on screen
-
-    #     if form.is_valid():
-    #         print("The form is valid")
-    #         print(form.cleaned_data)
-
-    #         job_id = form.cleaned_data['job_id']
-    #         job_date = form.cleaned_data['job_date']
-    #         location = form.cleaned_data['location']
-    #         practice_name = form.cleaned_data['practice_name']
-    #         language = form.cleaned_data['language']
-    #         lep_name = form.cleaned_data['lep_name']
-    #         expected_duration = form.cleaned_data['expected_duration']
-    #         description = form.cleaned_data['description']
-    #         client = Client.objects.first()
-
-    #         Job.objects.create(
-    #             client_job_id=job_id,
-    #             job_date=job_date,
-    #             location=location,
-    #             practice_name=practice_name,
-    #             language=language,
-    #             lep_name=lep_name,
-    #             expected_duration=expected_duration,
-    #             description=description,
-    #             client=client,
-    #         )
-    #         print("Job Created")
-    #         return redirect("/api/jobs/")
-
-    #     else:
-    #         print("Invalid Form")
-        
-
-    # context = {
-    #     "form": form
-    # }
-#     return render(request, "jobs/job_create.html", context)
-
+@ require_POST
+def remove_job(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    if job.client != request.user.client:
+        raise Http404
+    job.delete()
+    return HttpResponse(
+        status=204,
+        headers={
+            'HX-Trigger': json.dumps({
+                "jobListChanged": None,
+                "showMessage": f"{job.client}'s job has been deleted."
+            })
+        })

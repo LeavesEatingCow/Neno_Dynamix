@@ -1,14 +1,12 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-    <a href="{% url 'jobs:job-create' %}"> Create a new Job </a>
-    <hr />
-    <h1>This is all of our jobs </h1>
-    {% for job in jobs %}
-        <div class="interpreter">
-            <a href="{% url 'jobs:job-detail' job.pk %}"> {{ job }} </a>: {{ job.description }}
-        </div>
-    {% endfor %}
-
-{% endblock %}
+{% for job in jobs %}
+<tr id="job-{{ job.pk }}" class="job-row">
+  <td>{{ job.pk }}</td>
+  <td>{{ job.language.name }}</td>
+  <td>{{ job.date_posted }}</td>
+  <td>{{ job.status }}</td>
+  <td>
+    <button class="btn btn-primary btn-sm" hx-get="{% url 'jobs:edit-job' pk=job.pk %}" hx-target="#dialog">Edit</button>
+    <button class="btn btn-light btn-sm" hx-get="{% url 'jobs:remove-job-confirmation' pk=job.pk %}" hx-target="#dialog">Delete</button>
+  </td>
+</tr>
+{% endfor %}
