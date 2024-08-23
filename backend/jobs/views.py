@@ -166,28 +166,9 @@ def edit_job(request, pk):
     if job.client != request.user.client:
         raise Http404
     if request.method == "POST":
-        form = JobModelForm(request.POST, initial={
-            'client' : job.client,
-            'client_job_id' : job.client_job_id,
-            'job_date' : job.job_date,
-            'date_posted' : job.date_posted,
-            'location' : job.location,
-            'practice_name' : job.practice_name,
-            'language' : job.language,
-            'lep_name' : job.lep_name,
-            'expected_duration' : job.expected_duration,
-            'description' : job.description,
-        })
-        if form.is_valid():
-            job.client_job_id = form.cleaned_data.get('client_job_id'),
-            job.job_date = form.cleaned_data.get('job_date'),
-            job.location = form.cleaned_data.get('location'),
-            job.practice_name = form.cleaned_data.get('practice_name'),
-            job.language = form.cleaned_data.get('language'),
-            job.lep_name = form.cleaned_data.get('lep_name'),
-            job.expected_duration = form.cleaned_data.get('expected_duration'),
-            job.description = form.cleaned_data.get('description'),
+        form = JobModelForm(request.POST, instance=job)
 
+        if form.is_valid():
             job.save()
             return HttpResponse(
                 status=204,
@@ -199,23 +180,13 @@ def edit_job(request, pk):
                 }
             )
         else:
+            print(form.errors)
             return render(request, 'jobs/job_form.html', {
                 'form': form,
                 'job': job,
             })
     else:
-        form = JobModelForm(initial={
-            'client' : job.client,
-            'client_job_id' : job.client_job_id,
-            'job_date' : job.job_date,
-            'date_posted' : job.date_posted,
-            'location' : job.location,
-            'practice_name' : job.practice_name,
-            'language' : job.language,
-            'lep_name' : job.lep_name,
-            'expected_duration' : job.expected_duration,
-            'description' : job.description,
-            })
+        form = JobModelForm(instance=job)
     return render(request, 'jobs/job_form.html', {
         'form': form,
         'job': job,
