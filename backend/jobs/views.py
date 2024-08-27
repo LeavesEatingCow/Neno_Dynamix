@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DeleteView
 from client.mixins import ClientAndLoginRequiredMixin
 from client.models import Client
+from interpreters.mixins import InterpreterAndLoginRequiredMixin
+from interpreters.models import Interpreter
 from .mixins import ClientIsOwnerMixin
 from .models import Job
 from .forms import JobForm, JobModelForm
@@ -23,7 +25,17 @@ class ClientJobListView(ClientAndLoginRequiredMixin, ListView):
     context_object_name = "jobs"
 
     def get_queryset(self):
-        return Job.objects.filter(client=self.request.user.client)
+        return Job.objects.filter(client=self.request.user.client).order_by('-id')
+
+class InterpreterJobListView(InterpreterAndLoginRequiredMixin, ListView):
+    model = Job
+    template_name = 'interpreters/interpreter_job_list.html'
+    context_object_name = 'jobs'
+
+    def get_queryset(self):
+        interpreter = self.request.user.interpreter
+        languages = interpreter.languages.all()
+        return Job.objects.filter(language__in=languages)
 
 def job_list(request):
     jobs = Job.objects.all()
@@ -48,16 +60,16 @@ def job_detail(request, pk):
 
     return render(request, "jobs/job_detail.html", context)
 
-class JobCreateView(ClientAndLoginRequiredMixin, CreateView):
-    template_name = "jobs/job_create.html"
-    form_class = JobModelForm
+# class JobCreateView(ClientAndLoginRequiredMixin, CreateView):
+#     template_name = "jobs/job_create.html"
+#     form_class = JobModelForm
 
-    def get_success_url(self) -> str:
-        return reverse("jobs:job-list")
+#     def get_success_url(self) -> str:
+#         return reverse("jobs:job-list")
     
-    def form_valid(self, form):
-        form.instance.client = self.request.user.client
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.instance.client = self.request.user.client
+#         return super().form_valid(form)
         
 
 def job_create(request):
@@ -128,6 +140,33 @@ class JobListView(ClientAndLoginRequiredMixin, ListView):
     queryset = Job.objects.all()
     context_object_name = "jobs"
 
+class JobCreateView(ClientAndLoginRequiredMixin, CreateView):
+    model = Job
+    form_class = JobModelForm
+    template_name = 'jobs/job_form.html'
+
+    def form_valid(self, form):
+        # Create the Job instance without saving it to the database yet
+        job = form.save(commit=False)
+        # Assign the client to the current user
+        job.client = self.request.user.client
+        # Save the Job instance to the database
+        job.save()
+
+        # Returning a response with HTMX trigger headers
+        return HttpResponse(
+            status=204,
+            headers={
+                'HX-Trigger': json.dumps({
+                    "jobListChanged": None,
+                    "showMessage": f"{job.client}'s job has been added."
+                })
+            }
+        )
+    
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
 def add_job(request):
     if request.method == "POST":
         form = JobModelForm(request.POST)
@@ -160,6 +199,32 @@ def add_job(request):
     return render(request, 'jobs/job_form.html', {
         'form': form,
     })
+
+class JobUpdateView(ClientAndLoginRequiredMixin, UpdateView):
+    model = Job
+    form_class = JobModelForm
+    template_name = 'jobs/job_form.html'
+
+    def get_object(self, queryset=None):
+        job = super().get_object(queryset)
+        if job.client != self.request.user.client:
+            raise Http404
+        return job
+
+    def form_valid(self, form):
+        job = form.save()
+        return HttpResponse(
+            status=204,
+            headers={
+                'HX-Trigger': json.dumps({
+                    "jobListChanged": None,
+                    "showMessage": f"{job.client}'s job has been updated."
+                })
+            }
+        )
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
 def edit_job(request, pk):
     job = get_object_or_404(Job, pk=pk)
