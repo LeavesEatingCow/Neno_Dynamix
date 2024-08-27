@@ -5,3 +5,4 @@ djangorestframework
 pyyaml
 requests
 django-cors-headers
+django-durationwidget2
