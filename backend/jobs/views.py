@@ -1,11 +1,12 @@
-from typing import Any
 import json
 from django.http import HttpResponse, Http404
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
-from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from django.forms.models import model_to_dict
 from client.mixins import ClientAndLoginRequiredMixin
 from client.models import Client
 from interpreters.mixins import InterpreterAndLoginRequiredMixin
@@ -29,13 +30,13 @@ class ClientJobListView(ClientAndLoginRequiredMixin, ListView):
 
 class InterpreterJobListView(InterpreterAndLoginRequiredMixin, ListView):
     model = Job
-    template_name = 'interpreters/interpreter_job_list.html'
+    template_name = "jobs/job_list.html"
     context_object_name = 'jobs'
 
     def get_queryset(self):
         interpreter = self.request.user.interpreter
         languages = interpreter.languages.all()
-        return Job.objects.filter(language__in=languages)
+        return Job.objects.filter(language__in=languages).order_by('-job_date')
 
 def job_list(request):
     jobs = Job.objects.all()
@@ -46,10 +47,38 @@ def job_list(request):
 
     return render(request, "jobs/job_list.html", context)
 
-class JobDetailView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, DeleteView):
+class JobDetailView(LoginRequiredMixin, DetailView):
     template_name = "jobs/job_detail.html"
     queryset = Job.objects.all()
     context_object_name = "job"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        job = self.get_object()
+        
+        # Create a dictionary to map fields to custom labels
+        custom_labels = {
+            'client': 'Client Name',
+            'client_job_id': 'Job ID',
+            'job_date': 'Job Date',
+            'job_time': 'Job Time',
+            'location': 'Location',
+            'practice_name': 'Requester\'s Name',
+            'language': 'Language',
+            'lep_name': 'Patient\'s Name',
+            'expected_duration': 'Expected Duration',
+            'description': 'Description',
+            'status': 'Status',
+        }
+
+        # Convert the job object to a dictionary and replace field names with custom labels
+        job_dict = {
+            custom_labels.get(field, field): str(getattr(job, field))
+            for field in custom_labels
+        }
+
+        context['job_fields'] = job_dict
+        return context
 
 def job_detail(request, pk):
     job = Job.objects.get(id=pk)
@@ -90,13 +119,13 @@ def job_create(request):
     }
     return render(request, "jobs/job_create.html", context)
 
-class JobUpdateView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, UpdateView):
-    template_name = "jobs/job_update.html"
-    form_class = JobModelForm
-    queryset = Job.objects.all()
+# class JobUpdateView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, UpdateView):
+#     template_name = "jobs/job_update.html"
+#     form_class = JobModelForm
+#     queryset = Job.objects.all()
 
-    def get_success_url(self) -> str:
-        return reverse("jobs:job-list")
+#     def get_success_url(self) -> str:
+#         return reverse("jobs:job-list")
 
 def job_update(request, pk):
     job = Job.objects.get(id=pk)
@@ -119,12 +148,12 @@ def job_update(request, pk):
 
     return render(request, "jobs/job_update.html", context)
 
-class JobDeleteView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, DeleteView):
-    template_name = "jobs/job_delete.html"
-    queryset = Job.objects.all()
+# class JobDeleteView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, DeleteView):
+#     template_name = "jobs/job_delete.html"
+#     queryset = Job.objects.all()
 
-    def get_success_url(self) -> str:
-        return reverse("jobs:job-list")
+#     def get_success_url(self) -> str:
+#         return reverse("jobs:job-list")
 
 def job_delete(request, pk):
     job = Job.objects.get(id=pk)

@@ -1,17 +1,15 @@
-{% extends "base.html" %}
-
-{% block content %}
-    <a href="{% url 'jobs:job-list' %}"> Go back to Jobs </a>
-    <hr/>
-    <h1>This is the details of {{ job.client }}'s job </h1>
-    <p>Date: {{ job.job_date }}</p>
-    <p>ID: {{ job.client_job_id }}</p>
-    <p>Location: {{ job.location }}</p>
-    <p>Name: {{ job.practice_name }}</p>
-    <p>Language: {{ job.language }}</p>
-    <p>LEP Name: {{ job.lep_name }}</p>
-    <p> Description: {{ job.description }}</p>
-    <hr/>
-    <a href="{% url 'jobs:job-update' job.pk %}">Update</a>
-    <a href="{% url 'jobs:job-delete' job.pk %}">Delete</a>
-{% endblock %}
+<form hx-post="{% url 'assignments:add-assignment' job.pk %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Job ID: {{ job.pk }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        {% for field_name, value in job_fields.items %}
+            <p>{{ field_name|capfirst }}: {{ value }}</p>  
+        {% endfor %}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Accept</button>
+    </div>
+</form>

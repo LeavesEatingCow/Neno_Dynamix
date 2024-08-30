@@ -45,12 +45,8 @@ class InterpreterUpdateView(InterpreterAndLoginRequiredMixin, UserIsOwnerMixin, 
     def get_success_url(self) -> str:
         return reverse("jobs:job-list")
     
-class InterpreterJobListView(InterpreterAndLoginRequiredMixin, generic.ListView):
-    model = Job
-    template_name = 'interpreters/interpreter_jobs.html'
-    context_object_name = 'jobs'
+class InterpreterDashboardView(InterpreterAndLoginRequiredMixin, UserIsOwnerMixin, generic.TemplateView):
+    template_name = "interpreters/interpreter_job_list.html"
 
-    def get_queryset(self):
-        interpreter = self.request.user.interpreter
-        languages = interpreter.languages.all()
-        return Job.objects.filter(language__in=languages)
+class InterpreterAssignmentView(InterpreterAndLoginRequiredMixin, UserIsOwnerMixin, generic.TemplateView):
+    template_name = "interpreters/interpreter_assignment_list.html"

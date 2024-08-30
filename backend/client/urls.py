@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import ClientSignupView, ClientDetailView, ClientUpdateView, ClientDashboardView
-from jobs.views import ClientJobListView
 
 urlpatterns = [
     path('signup/', ClientSignupView.as_view(), name="signup"),

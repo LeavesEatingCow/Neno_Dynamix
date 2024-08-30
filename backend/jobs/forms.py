@@ -14,6 +14,7 @@ class JobModelForm(forms.ModelForm):
             Div(
                 FloatingField('client_job_id', css_class='form-control'),
                 FloatingField('job_date', css_class='form-control'),
+                FloatingField('job_time', css_class='form-control'),
                 FloatingField('location', css_class='form-control'),
                 FloatingField('practice_name', css_class='form-control'),
                 FloatingField('language', css_class='form-control'),
@@ -39,6 +40,7 @@ class JobModelForm(forms.ModelForm):
         fields = (
             "client_job_id", 
             "job_date",
+            "job_time",
             "location",
             "practice_name",
             "language",
@@ -50,6 +52,7 @@ class JobModelForm(forms.ModelForm):
         widgets = {
             'language': forms.Select(choices=Language.objects.all()),
             'job_date': forms.DateInput(attrs={'type': 'date'}),
+            'job_time': forms.TimeInput(attrs={'type': 'time'})
         }
     
     def clean_client_job_id(self):

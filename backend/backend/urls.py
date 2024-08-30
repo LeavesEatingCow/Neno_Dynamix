@@ -26,6 +26,7 @@ urlpatterns = [
     path("interpreters/", include(("interpreters.urls", "interpreters"), namespace="interpreters")),
     path("clients/", include(("client.urls", "clients"), namespace="clients")),
     path("jobs/", include(("jobs.urls", "jobs"),namespace="jobs")),
+    path("assignments/", include(("assignments.urls", "assignments"),namespace="assignments")),
 ]
 
 if settings.DEBUG:

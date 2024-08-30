@@ -46,6 +46,10 @@ class CustomLoginView(LoginView):
         user = self.request.user
         if user.is_client:
             settings.LOGIN_REDIRECT_URL = reverse_lazy("clients:client-dashbaord")
+
+        if user.is_interpreter:
+            settings.LOGIN_REDIRECT_URL = reverse_lazy("interpreters:interpreter-dashboard")
+
         return resolve_url(self.next_page or settings.LOGIN_REDIRECT_URL)
 
 @login_required

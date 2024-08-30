@@ -1,0 +1,14 @@
+{% for assignment in assignments %}
+<tr id="assignment-{{ assignment.pk }}" class="assignment-row">
+    <td>{{ assignment.job.pk }}</td>
+    <td>{{ assignment.job.language.name }}</td>
+    <td>{{ assignment.job.job_date }}</td>
+    <td>{{ assignment.job.job_time }}</td>
+    <td>{{ assignment.job.status }}</td>
+    <td>
+        <a href="{% url 'assignments:view-assignment' pk=assignment.pk %}">
+            <button class="btn btn-primary btn-sm" type="button">View</button>
+        </a>
+    </td>
+</tr>
+{% endfor %}

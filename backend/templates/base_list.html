@@ -14,6 +14,17 @@
 </head>
 
 <body>
+  <ul class="nav nav-tabs">
+    <a href="{% url 'core:landing-page' %}">
+      <img class="img-fluid" src="{% static 'images/fav-2-300x225.png' %}" alt="..." width=60px height=60px/>
+    </a>
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="{% url 'interpreters:interpreter-dashboard' %}">Jobs</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="{% url 'interpreters:interpreter-assignments' %}">Active</a>
+    </li>
+  </ul>
   {% block content %}
   {% endblock content %}
 
