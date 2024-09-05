@@ -21,9 +21,14 @@
     <li class="nav-item">
       <a class="nav-link active" aria-current="page" href="{% url 'interpreters:interpreter-dashboard' %}">Jobs</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="{% url 'interpreters:interpreter-assignments' %}">Active</a>
-    </li>
+    {% if user.is_interpreter %}
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'interpreters:interpreter-assignments' %}">Active</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="{% url 'interpreters:interpreter-completed-assignments' %}">Completed</a>
+      </li>
+    {% endif %}
   </ul>
   {% block content %}
   {% endblock content %}

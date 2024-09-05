@@ -1,0 +1,80 @@
+{% extends 'base_list.html' %}
+
+{% block content %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p>Interpreter: {{ assignment.interpreter }}</p>
+    <p>Date: {{ assignment.assignment_date }}</p>
+    <p>Time: {{ assignment.assignment_time }}</p>
+    <p>Location: {{ assignment.location }}</p>
+    <p>Language: {{ assignment.language }}</p>
+    <p>Limited English Speaker: {{ assignment.lep_name }}</p>
+    <p>Requester's Name: {{ assignment.serviced_name }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_arrival_time">Arrival Time</label>
+            <div class="input-group">
+                {{ form.arrival_time }}
+                <button type="button" class="btn btn-secondary" onclick="setCurrentTime('id_arrival_time')">Set Now</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_start_time">Start Time</label>
+            <div class="input-group">
+                {{ form.start_time }}
+                <button type="button" class="btn btn-secondary" onclick="setCurrentTime('id_start_time')">Set Now</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_end_time">End Time</label>
+            <div class="input-group">
+                {{ form.end_time }}
+                <button type="button" class="btn btn-secondary" onclick="setCurrentTime('id_end_time')">Set Now</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_parking_fee">Parking Fee</label>
+            <div class="input-group">
+                {{ form.parking_fee }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_notes">Notes</label>
+            <div class="input-group">
+                {{ form.notes }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_round_trip_distance">Round Trip Distance</label>
+            <div class="input-group">
+                {{ form.round_trip_distance }} mi
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary" name="save_assignment">Save</button>
+        <button type="submit" class="btn btn-success" name="submit_assignment">Submit</button>
+    </form>
+
+    <script>
+        function setCurrentTime(fieldId) {
+            var now = new Date();
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById(fieldId).value = hours + ':' + minutes;
+        }
+    </script>
+{% endblock content %}

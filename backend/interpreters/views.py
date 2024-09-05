@@ -50,3 +50,6 @@ class InterpreterDashboardView(InterpreterAndLoginRequiredMixin, UserIsOwnerMixi
 
 class InterpreterAssignmentView(InterpreterAndLoginRequiredMixin, UserIsOwnerMixin, generic.TemplateView):
     template_name = "interpreters/interpreter_assignment_list.html"
+
+class InterpreterCompletedAssignmentView(InterpreterAndLoginRequiredMixin, UserIsOwnerMixin, generic.TemplateView):
+    template_name = "interpreters/interpreter_completed_list.html"

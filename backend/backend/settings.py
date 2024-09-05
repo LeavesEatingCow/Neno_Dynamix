@@ -27,7 +27,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -134,7 +134,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Project-level static files
+    os.path.join(BASE_DIR, "static"),  # Project-level static files
     # Add more paths for app-level static files if needed
     os.path.join(BASE_DIR, 'client', 'static')
 ]
