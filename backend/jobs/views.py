@@ -299,7 +299,10 @@ def remove_job(request, pk):
     job = get_object_or_404(Job, pk=pk)
     if job.client != request.user.client:
         raise Http404
-    job.delete()
+    job.status = "CANCELLED"
+    job.save()
+    if job.status == "OPEN":
+        job.delete()
     return HttpResponse(
         status=204,
         headers={

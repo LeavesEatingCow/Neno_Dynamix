@@ -4,13 +4,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-        <p>Delete Job ID:{{job.client_job_id}}?</p>
+        <p>Delete Job?</p>
+        <p class="text-muted">Cancellations less than 24 hours will result in a minimum of 2 hours pay</p>
         <p class="text-muted">This action can not be undone</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
         Cancel
         </button>
-        <button type="submit" class="btn btn-danger" hx-post = "{% url 'jobs:remove-job' pk=job.pk %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' >Delete</button>
+        <button type="submit" class="btn btn-danger" hx-post = "{% url 'jobs:remove-job' pk=job.pk %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' >Remove</button>
     </div>
 </div>

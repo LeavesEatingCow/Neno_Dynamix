@@ -4,7 +4,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 
-from .models import Assignment
+from .models import Assignment, Timesheet
 from .forms import AssignmentUpdateForm
 from jobs.models import Job
 # Create your views here.

@@ -16,14 +16,11 @@ class Interpreter(models.Model):
     zip_code = models.CharField(max_length=10)
     languages = models.ManyToManyField('Language', related_name='interpreters')
 
-    def accept_job(self):
-        pass
-
-    def submit_timesheet(self):
-        pass
-
-    def send_update(self):
-        pass
+    rate_of_pay = models.DecimalField(
+        null=True,
+        max_digits=10,
+        decimal_places=2
+    )
 
     def __str__(self) -> str:
         return f'{self.user.first_name} {self.user.last_name}'
@@ -34,8 +31,6 @@ class Language(models.Model):
     def __str__(self):
         return self.name
     
-from django.db import models
-
 class InterpreterApplicant(models.Model):
     BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
 
