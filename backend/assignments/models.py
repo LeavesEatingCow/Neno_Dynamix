@@ -1,4 +1,8 @@
+import googlemaps
+import json
 from django.db import models
+from django.conf import settings
+
 
 # Create your models here.
 class Assignment(models.Model):
@@ -6,7 +10,7 @@ class Assignment(models.Model):
     job = models.OneToOneField("jobs.Job", unique=True, on_delete=models.DO_NOTHING)
     assignment_date = models.DateField(blank=True, null=True)
     assignment_time = models.TimeField(blank=True, null=True)
-    location = models.CharField(max_length=255)
+    location = models.ForeignKey("core.Address", on_delete=models.SET_NULL, null=True)
     language = models.CharField(max_length=100)
     arrival_time = models.TimeField(null=True)
     start_time = models.TimeField(null=True)
@@ -18,9 +22,16 @@ class Assignment(models.Model):
     serviced_name = models.CharField(max_length=100)
     # signature = models.ImageField(upload_to='signatures/', null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        distance = gmaps.distance_matrix(str(self.interpreter.address), str(self.location), units="imperial")['rows'][0]['elements'][0]['distance']['text'].split()[0]
+        self.round_trip_distance = int(float(distance))
+        print(self.round_trip_distance)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.interpreter} assigned to {self.job}"
-
+            
 class Timesheet(models.Model):
     assignment = models.ForeignKey("Assignment", on_delete=models.CASCADE)
     interpreter = models.ForeignKey("interpreters.Interpreter", on_delete=models.DO_NOTHING)

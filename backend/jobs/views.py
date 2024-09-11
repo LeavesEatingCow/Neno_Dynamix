@@ -5,12 +5,13 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from django.forms.models import model_to_dict
+
 from client.mixins import ClientAndLoginRequiredMixin
 from client.models import Client
 from interpreters.mixins import InterpreterAndLoginRequiredMixin
 from interpreters.models import Interpreter
+from core.models import Address
 from .mixins import ClientIsOwnerMixin
 from .models import Job
 from .forms import JobForm, JobModelForm
@@ -62,7 +63,6 @@ class JobDetailView(LoginRequiredMixin, DetailView):
             'client_job_id': 'Job ID',
             'job_date': 'Job Date',
             'job_time': 'Job Time',
-            'location': 'Location',
             'practice_name': 'Requester\'s Name',
             'language': 'Language',
             'lep_name': 'Patient\'s Name',
@@ -76,6 +76,10 @@ class JobDetailView(LoginRequiredMixin, DetailView):
             custom_labels.get(field, field): str(getattr(job, field))
             for field in custom_labels
         }
+
+        # Add address fields (if job has an associated address)
+        if job.address:
+            job_dict['Location'] = str(job.address)
 
         context['job_fields'] = job_dict
         return context
@@ -179,7 +183,29 @@ class JobCreateView(ClientAndLoginRequiredMixin, CreateView):
         job = form.save(commit=False)
         # Assign the client to the current user
         job.client = self.request.user.client
-        # Save the Job instance to the database
+        # Now handle the address fields from the form
+        address_data = {
+            'street_address': form.cleaned_data['street_address'],
+            'apt_number': form.cleaned_data.get('apt_number', ''),
+            'city': form.cleaned_data['city'],
+            'state': form.cleaned_data['state'],
+            'zip_code': form.cleaned_data['zip_code'],
+        }
+
+        # Create or update the address instance
+        address, _ = Address.objects.get_or_create(
+            street_address=address_data['street_address'],
+            city=address_data['city'],
+            state=address_data['state'],
+            zip_code=address_data['zip_code'],
+            defaults=address_data
+        )
+
+        # Associate the address with the job
+        job.address = address
+        print(str(job.address))
+
+        # Save the Job instance with the address
         job.save()
 
         # Returning a response with HTMX trigger headers
@@ -241,7 +267,29 @@ class JobUpdateView(ClientAndLoginRequiredMixin, UpdateView):
         return job
 
     def form_valid(self, form):
-        job = form.save()
+        # Save the job object without committing to the database yet
+        job = form.save(commit=False)
+
+        # Get the address fields from the form
+        address_data = {
+            'street_address': form.cleaned_data['street_address'],
+            'apt_number': form.cleaned_data.get('apt_number', ''),
+            'city': form.cleaned_data['city'],
+            'state': form.cleaned_data['state'],
+            'zip_code': form.cleaned_data['zip_code'],
+        }
+
+        # Check if the job already has an address
+        if job.address:
+            # Update the existing address with the new form data
+            Address.objects.filter(id=job.address.id).update(**address_data)
+        else:
+            # Create a new address if one does not already exist
+            address = Address.objects.create(**address_data)
+            job.address = address  # Associate the new address with the job
+
+        # Save the job object to the database
+        job.save()
         return HttpResponse(
             status=204,
             headers={

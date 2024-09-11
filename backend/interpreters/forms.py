@@ -1,7 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+
+from core.models import Address
 from .models import Interpreter, Language, InterpreterApplicant
+from . import constants as con
 
 User = get_user_model()
 # class InterpreterCreationForm(UserCreationForm):
@@ -32,11 +35,19 @@ class InterpreterProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
     email = forms.EmailField()
+    
+    # Address fields
+    street_address = forms.CharField(max_length=100)
+    apt_number = forms.CharField(max_length=10, required=False)
+    city = forms.CharField(max_length=50)
+    state = forms.CharField(max_length=2, widget=forms.Select(choices=con.STATE_CHOICES))
+    zip_code = forms.CharField(max_length=10)
+    
     languages = forms.ModelMultipleChoiceField(queryset=Language.objects.all(), widget=forms.CheckboxSelectMultiple)
 
     class Meta:
         model = Interpreter
-        fields = ['phone_number', 'apt_number', 'city', 'state', 'zip_code', 'languages']
+        fields = ['phone_number', 'languages']  # Only include Interpreter fields
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,15 +55,48 @@ class InterpreterProfileForm(forms.ModelForm):
         self.fields['last_name'].initial = self.instance.user.last_name
         self.fields['email'].initial = self.instance.user.email
 
+        # Initialize address fields if the interpreter has an associated address
+        if self.instance.address:
+            self.fields['street_address'].initial = self.instance.address.street_address
+            self.fields['apt_number'].initial = self.instance.address.apt_number
+            self.fields['city'].initial = self.instance.address.city
+            self.fields['state'].initial = self.instance.address.state
+            self.fields['zip_code'].initial = self.instance.address.zip_code
+
     def save(self, commit=True):
         interpreter = super().save(commit=False)
+        
+        # Save the User data (first name, last name, email)
         interpreter.user.first_name = self.cleaned_data['first_name']
         interpreter.user.last_name = self.cleaned_data['last_name']
         interpreter.user.email = self.cleaned_data['email']
+        
+        # Handle address saving or updating
+        if not interpreter.address:
+            # Create a new Address if it doesn't exist
+            address = Address(
+                street_address=self.cleaned_data['street_address'],
+                apt_number=self.cleaned_data.get('apt_number', ''),
+                city=self.cleaned_data['city'],
+                state=self.cleaned_data['state'],
+                zip_code=self.cleaned_data['zip_code']
+            )
+            address.save()
+            interpreter.address = address
+        else:
+            # Update existing Address
+            interpreter.address.street_address = self.cleaned_data['street_address']
+            interpreter.address.apt_number = self.cleaned_data.get('apt_number', '')
+            interpreter.address.city = self.cleaned_data['city']
+            interpreter.address.state = self.cleaned_data['state']
+            interpreter.address.zip_code = self.cleaned_data['zip_code']
+            interpreter.address.save()
+        
         if commit:
-            interpreter.user.save()
-            interpreter.save()
-            self.save_m2m()
+            interpreter.user.save()  # Save the User model
+            interpreter.save()       # Save the Interpreter model
+            self.save_m2m()          # Save many-to-many fields
+        
         return interpreter
     
 

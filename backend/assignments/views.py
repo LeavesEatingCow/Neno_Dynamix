@@ -7,6 +7,7 @@ from django.contrib import messages
 from .models import Assignment, Timesheet
 from .forms import AssignmentUpdateForm
 from jobs.models import Job
+from core.models import Address
 # Create your views here.
 
 class AssignmentCreateView(CreateView):
@@ -19,14 +20,14 @@ class AssignmentCreateView(CreateView):
         if hasattr(job, 'assignment'):
             messages.error(request, 'This job has already been accepted by another interpreter.')
             return redirect('jobs:view-job', pk=job_id)
-
+        
         # Create an assignment
         assignment = Assignment.objects.create(
             interpreter=interpreter,
             job=job,
             assignment_date=job.job_date,
             assignment_time=job.job_time,
-            location=job.location,
+            location=job.address,
             language=job.language.name,
             lep_name=job.lep_name,
             serviced_name=job.practice_name,
@@ -38,7 +39,7 @@ class AssignmentCreateView(CreateView):
 
         messages.success(request, 'You have successfully accepted the job.')
         # return redirect('assignments:assignment_detail', pk=assignment.pk)
-        return redirect('jobs:job_detail', pk=job_id)
+        return redirect('jobs:view-job', pk=job_id)
     
 
 class ActiveAssignmentListView(ListView):

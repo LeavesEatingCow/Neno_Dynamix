@@ -15,7 +15,7 @@ class Job(models.Model):
     job_date = models.DateField()
     job_time = models.TimeField()
     date_posted = models.DateTimeField(default=datetime.now)
-    location = models.CharField(max_length=255)
+    address = models.ForeignKey("core.Address", on_delete=models.SET_NULL, null=True)
     practice_name = models.CharField(max_length=255)
     language = models.ForeignKey("interpreters.Language", on_delete=models.DO_NOTHING)
     lep_name = models.CharField(max_length=50)
