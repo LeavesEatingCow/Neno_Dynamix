@@ -99,6 +99,7 @@ class AssignmentUpdateView(UpdateView):
                 assignment.job.status = "COMPLETED"
                 assignment.job.save()
                 assignment.save()
+                
                 messages.success(self.request, 'Assignment submitted successfully.')
                 return redirect('assignments:view-assignment', pk=assignment.pk)
             else:

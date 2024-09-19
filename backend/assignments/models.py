@@ -15,7 +15,7 @@ class Assignment(models.Model):
     arrival_time = models.TimeField(null=True)
     start_time = models.TimeField(null=True)
     end_time = models.TimeField(null=True)
-    parking_fee = models.DecimalField(max_digits=5, decimal_places=2, null=True, default=0.00)
+    parking_fee = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     notes = models.TextField(blank=True, null=True)
     round_trip_distance = models.IntegerField(default=0)
     lep_name = models.CharField(max_length=100)
