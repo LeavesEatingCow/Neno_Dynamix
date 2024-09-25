@@ -7,7 +7,7 @@ from django.conf import settings
 # Create your models here.
 class Assignment(models.Model):
     interpreter = models.ForeignKey("interpreters.Interpreter", on_delete=models.DO_NOTHING)
-    job = models.OneToOneField("jobs.Job", unique=True, on_delete=models.DO_NOTHING)
+    job = models.OneToOneField("jobs.Job", null=True, on_delete=models.SET_NULL)
     assignment_date = models.DateField(blank=True, null=True)
     assignment_time = models.TimeField(blank=True, null=True)
     location = models.ForeignKey("core.Address", on_delete=models.SET_NULL, null=True)

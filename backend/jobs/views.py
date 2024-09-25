@@ -1,5 +1,6 @@
 import json
-from django.http import HttpResponse, Http404
+from django.db.models.query import QuerySet
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, Http404
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -27,7 +28,7 @@ class ClientJobListView(ClientAndLoginRequiredMixin, ListView):
     context_object_name = "jobs"
 
     def get_queryset(self):
-        return Job.objects.filter(client=self.request.user.client).order_by('-id')
+        return Job.objects.filter(client=self.request.user.client).order_by('job_date')
 
 class InterpreterJobListView(InterpreterAndLoginRequiredMixin, ListView):
     model = Job
@@ -176,7 +177,7 @@ class JobListView(ClientAndLoginRequiredMixin, ListView):
 class JobCreateView(ClientAndLoginRequiredMixin, CreateView):
     model = Job
     form_class = JobModelForm
-    template_name = 'jobs/job_form.html'
+    template_name = 'jobs/job_create.html'
 
     def form_valid(self, form):
         # Create the Job instance without saving it to the database yet
@@ -258,7 +259,7 @@ def add_job(request):
 class JobUpdateView(ClientAndLoginRequiredMixin, UpdateView):
     model = Job
     form_class = JobModelForm
-    template_name = 'jobs/job_form.html'
+    template_name = 'jobs/job_create.html'
 
     def get_object(self, queryset=None):
         job = super().get_object(queryset)
@@ -359,3 +360,23 @@ def remove_job(request, pk):
                 "showMessage": f"{job.client}'s job has been deleted."
             })
         })
+
+class JobDeleteView(ClientAndLoginRequiredMixin, ClientIsOwnerMixin, DeleteView):
+    model = Job
+    template_name = "jobs/job_list.html"
+    
+    def get_success_url(self):
+        return reverse('jobs:client-job-list')
+    
+    def form_valid(self, form):
+        job = self.get_object()
+
+        # Check the job's status
+        if job.status == 'OPEN':
+            # If status is 'OPEN', proceed with deletion
+            return super().form_valid(form)
+        else:
+            # If status is not 'OPEN', change to 'CANCELLED'
+            job.status = 'CANCELLED'
+            job.save()
+            return HttpResponseRedirect(self.get_success_url())

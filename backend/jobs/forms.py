@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, ButtonHolder, Submit, Button
+from crispy_forms.layout import Layout, Div, ButtonHolder, Submit, Button, Row, Column
 from crispy_bootstrap5.bootstrap5 import FloatingField
 
 from .models import Job
@@ -21,32 +21,35 @@ class JobModelForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            Div(
-                FloatingField('client_job_id', css_class='form-control'),
-                FloatingField('job_date', css_class='form-control'),
-                FloatingField('job_time', css_class='form-control'),
-                FloatingField('practice_name', css_class='form-control'),
-                FloatingField('language', css_class='form-control'),
-                FloatingField('lep_name', css_class='form-control'),
-                FloatingField('expected_duration', css_class='form-control'),
-                FloatingField('description', css_class='form-control'),
-                css_class='modal-body'
-            ),
-            Div(
-                # Address fields in a separate div section
-                FloatingField('street_address', css_class='form-control'),
-                FloatingField('apt_number', css_class='form-control'),
-                FloatingField('city', css_class='form-control'),
-                FloatingField('state', css_class='form-control'),
-                FloatingField('zip_code', css_class='form-control'),
-                css_class='modal-body'
-            ),
-            Div(
-                Button(
-                    'cancel', 'Cancel', css_class='btn btn-secondary', **{'data-bs-dismiss': 'modal'}
+            Row(
+                Column(
+                    FloatingField('client_job_id', css_class='form-control'),
+                    Row(
+                        Column(
+                            FloatingField('job_date', css_class='form-control')
+                        ),
+                        Column(
+                            FloatingField('job_time', css_class='form-control')
+                        )
+                    ),
+                    FloatingField('practice_name', css_class='form-control'),
+                    FloatingField('language', css_class='form-control'),
+                    FloatingField('lep_name', css_class='form-control'),
+                    FloatingField('expected_duration', css_class='form-control'),
+                    'description'
                 ),
+                Column(
+                    # Address fields in a separate div section
+                    FloatingField('street_address', css_class='form-control'),
+                    FloatingField('apt_number', css_class='form-control'),
+                    FloatingField('city', css_class='form-control'),
+                    FloatingField('state', css_class='form-control'),
+                    FloatingField('zip_code', css_class='form-control'),
+                )
+            ),
+            Div(
                 ButtonHolder(
-                    Submit('submit', 'Save', css_class='btn btn-primary')
+                    Submit('submit', 'SAVE', css_class='btn btn-primary')
                 ),
                 css_class='modal-footer',
                 css_id='form-footer'  # Adding custom id if needed
