@@ -106,6 +106,9 @@
     {% include 'partials/_sidebar.html' %}
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
       {% block content %}
       {% endblock content %}
     </main>

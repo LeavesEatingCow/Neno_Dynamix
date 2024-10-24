@@ -1,14 +1,48 @@
-{% for assignment in assignments %}
-<tr id="assignment-{{ assignment.pk }}" class="assignment-row">
-    <td>{{ assignment.job.pk }}</td>
-    <td>{{ assignment.job.language.name }}</td>
-    <td>{{ assignment.job.job_date }}</td>
-    <td>{{ assignment.job.job_time }}</td>
-    <td>{{ assignment.job.status }}</td>
-    <td>
-        <a href="{% url 'assignments:view-assignment' pk=assignment.pk %}">
-            <button class="btn btn-primary btn-sm" type="button">View</button>
-        </a>
-    </td>
-</tr>
-{% endfor %}
+{% extends 'base_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block css %}
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    {% if assignments|length > 0 %}
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Language</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for assignment in assignments %}
+                <tr>
+                    <td>{{ assignment.job.pk }}</td>
+                    <td>{{ assignment.job.language.name }}</td>
+                    <td>{{ assignment.job.job_date }}</td>
+                    <td>{{ assignment.job.job_time }}</td>
+                    <td>{{ assignment.job.status }}</td>
+                    <td>
+                        <a href="{% url 'assignments:view-assignment' pk=assignment.pk %}">
+                            <button class="btn btn-primary btn-sm" type="button">View</button>
+                        </a>
+                </td>
+                </tr>
+                
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

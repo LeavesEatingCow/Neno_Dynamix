@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
@@ -10,36 +11,37 @@ from jobs.models import Job
 from core.models import Address
 # Create your views here.
 
-class AssignmentCreateView(CreateView):
-    def post(self, request, *args, **kwargs):
-        job_id = kwargs.get('pk')
-        job = get_object_or_404(Job, pk=job_id)
-        interpreter = request.user.interpreter  # Assuming the user is an interpreter
 
-        # Check if the job has already been assigned
-        if hasattr(job, 'assignment'):
-            messages.error(request, 'This job has already been accepted by another interpreter.')
-            return redirect('jobs:view-job', pk=job_id)
-        
-        # Create an assignment
-        assignment = Assignment.objects.create(
-            interpreter=interpreter,
-            job=job,
-            assignment_date=job.job_date,
-            assignment_time=job.job_time,
-            location=job.address,
-            language=job.language.name,
-            lep_name=job.lep_name,
-            serviced_name=job.practice_name,
-        )
+    
+def create_assignment(request, *args, **kwargs):
+    job_id = kwargs.get('pk')
+    job = get_object_or_404(Job, pk=job_id)
+    interpreter = request.user.interpreter  # Assuming the user is an interpreter
 
-        # Update the job status
-        job.status = 'IN_PROGRESS'
-        job.save()
+    # Check if the job has already been assigned
+    if hasattr(job, 'assignment'):
+        messages.error(request, 'This job has already been accepted by another interpreter.')
+        return redirect('jobs:interpreter-job-list')
+    
+    # Create an assignment
+    assignment = Assignment.objects.create(
+        interpreter=interpreter,
+        job=job,
+        assignment_date=job.job_date,
+        assignment_time=job.job_time,
+        location=job.address,
+        language=job.language.name,
+        lep_name=job.lep_name,
+        serviced_name=job.practice_name,
+    )
 
-        messages.success(request, 'You have successfully accepted the job.')
-        # return redirect('assignments:assignment_detail', pk=assignment.pk)
-        return redirect('jobs:view-job', pk=job_id)
+    # Update the job status
+    job.status = 'IN_PROGRESS'
+    job.save()
+
+    messages.success(request, 'You have successfully accepted the job.')
+    # return redirect('assignments:assignment_detail', pk=assignment.pk)
+    return redirect('assignments:view-assignment', pk=assignment.pk)
     
 
 class ActiveAssignmentListView(ListView):

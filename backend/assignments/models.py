@@ -25,7 +25,7 @@ class Assignment(models.Model):
     def save(self, *args, **kwargs):
         gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         distance = gmaps.distance_matrix(str(self.interpreter.address), str(self.location), units="imperial")['rows'][0]['elements'][0]['distance']['text'].split()[0]
-        self.round_trip_distance = int(float(distance))
+        self.round_trip_distance = 2 * int(float(distance))
         print(self.round_trip_distance)
         super().save(*args, **kwargs)
 

@@ -18,10 +18,6 @@ from .models import Job
 from .forms import JobForm, JobModelForm
 # Create your views here.
 
-class JobListView(ClientAndLoginRequiredMixin, ListView):
-    template_name = "jobs/job_list.html"
-    queryset = Job.objects.all()
-    context_object_name = "jobs"
 
 class ClientJobListView(ClientAndLoginRequiredMixin, ListView):
     template_name = "jobs/job_list.html"
@@ -39,15 +35,6 @@ class InterpreterJobListView(InterpreterAndLoginRequiredMixin, ListView):
         interpreter = self.request.user.interpreter
         languages = interpreter.languages.all()
         return Job.objects.filter(language__in=languages).order_by('-job_date')
-
-def job_list(request):
-    jobs = Job.objects.all()
-
-    context = {
-        "jobs": jobs
-    }
-
-    return render(request, "jobs/job_list.html", context)
 
 class JobDetailView(LoginRequiredMixin, DetailView):
     template_name = "jobs/job_detail.html"

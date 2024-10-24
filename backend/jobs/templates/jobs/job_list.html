@@ -11,14 +11,16 @@
 
 {% block content %}
 
-  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Jobs</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-      <div class="btn-group me-2">
-        <a href="{% url 'jobs:add-job' %}"><button type="button" class="btn btn-primary">Add New Job</button></a>
+  {% if user.is_client %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Jobs</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+          <a href="{% url 'jobs:add-job' %}"><button type="button" class="btn btn-primary">Add New Job</button></a>
+        </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 
 
   {% if jobs|length > 0 %}
@@ -35,45 +37,49 @@
       <tbody>
 
         {% for job in jobs %}
-      <tr>
-        <td>{{ job.pk }}</td>
-        <td>{{ job.language.name }}</td>
-        <td>{{ job.job_date }}</td>
-        <td>{{ job.status }}</td>
-        <td>
-          <a href="{% url 'jobs:edit-job' job.pk %}"><button class="btn btn-primary"> VIEW </button></a>
-          <button href="#deleteJob-{{ job.pk }}" data-bs-toggle="modal" type="button" class="btn btn-danger"> DELETE </button>
-        </td>
-      </tr>
+          <tr>
+            <td>{{ job.pk }}</td>
+            <td>{{ job.language.name }}</td>
+            <td>{{ job.job_date }}</td>
+            <td>{{ job.status }}</td>
+            <td>
+              {% if user.is_interpreter %}
+                <a href="{% url 'assignments:add-assignment' job.pk %}"><button class="btn btn-primary"> ACCEPT </button></a>
+              {% else %}
+                <a href="{% url 'jobs:edit-job' job.pk %}"><button class="btn btn-primary"> VIEW </button></a>
+                <button href="#deleteJob-{{ job.pk }}" data-bs-toggle="modal" type="button" class="btn btn-danger"> DELETE </button>
+              {% endif %}
+            </td>
+          </tr>
 
-      <!-- MODALS MODALS -->
-      <!-- Modals Start Here -->
-      <div class="modal modal-sheet py-5" tabindex="-1" id="deleteJob-{{ job.pk }}">
-        <div class="modal-dialog">
-          <div class="modal-content rounded-6 shadow">
-    
-    
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title">Delete Confirmation</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-    
-            <div class="modal-body py-0">
-              <form action="{% url 'jobs:remove-job' pk=job.pk %}" method="POST">
-                {% csrf_token %}
-                <div class="modal-footer flex-column border-top-0">
-                  <p class="text-muted">Cancellations less than 24 hours will result in a minimum of 2 hours pay</p>
-                  <p class="text-muted">This action can not be undone</p>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-danger">Remove</button>
+          <!-- MODALS MODALS -->
+          <!-- Modals Start Here -->
+          <div class="modal modal-sheet py-5" tabindex="-1" id="deleteJob-{{ job.pk }}">
+            <div class="modal-dialog">
+              <div class="modal-content rounded-6 shadow">
+        
+        
+                <div class="modal-header border-bottom-0">
+                  <h5 class="modal-title">Delete Confirmation</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-              </form>
-              
-            
-    
+        
+                <div class="modal-body py-0">
+                  <form action="{% url 'jobs:remove-job' pk=job.pk %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-footer flex-column border-top-0">
+                      <p class="text-muted">Cancellations less than 24 hours will result in a minimum of 2 hours pay</p>
+                      <p class="text-muted">This action can not be undone</p>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-danger">Remove</button>
+                    </div>
+                  </form>
+                  
+                
+        
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
         {% endfor %}
       </tbody>
     </table>

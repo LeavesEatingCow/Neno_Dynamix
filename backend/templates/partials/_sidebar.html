@@ -14,36 +14,30 @@
               Dashboard
             </a>
           </li>
+          {% if user.is_client %}
           <li class="nav-item">
             <a class="nav-link d-flex align-items-center gap-2" href="{% url 'jobs:client-job-list' %}">
               <svg class="bi"><use xlink:href="#file-earmark"/></svg>
               Jobs
             </a>
           </li>
+          {% endif %}
+
+          {% if user.is_interpreter %}
           <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="#">
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'jobs:interpreter-job-list' %}">
               <svg class="bi"><use xlink:href="#cart"/></svg>
-              Products
+              Available Jobs
             </a>
           </li>
+
           <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="#">
-              <svg class="bi"><use xlink:href="#people"/></svg>
-              Customers
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'assignments:assignment-list' %}">
+              <svg class="bi"><use xlink:href="#cart"/></svg>
+              Assignments
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="#">
-              <svg class="bi"><use xlink:href="#graph-up"/></svg>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-2" href="#">
-              <svg class="bi"><use xlink:href="#puzzle"/></svg>
-              Integrations
-            </a>
-          </li>
+          {% endif %}
         </ul>
 
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
